@@ -38,7 +38,10 @@ app.include_router(application.router)
 
 @app.on_event("startup")
 def on_startup():
-    os.makedirs(settings.upload_dir, exist_ok=True)
+    try:
+        os.makedirs(settings.upload_dir, exist_ok=True)
+    except OSError:
+        pass
     init_db()
 
 
@@ -51,8 +54,9 @@ def health():
 _candidate_dirs = [
     os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "frontend")),
     os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "frontend")),
+    os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "public")),
     os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "static")),
 ]
 _static_dir = next((d for d in _candidate_dirs if os.path.isdir(d)), None)
-if _static_dir:
+if not os.environ.get("VERCEL") and _static_dir:
     app.mount("/", StaticFiles(directory=_static_dir, html=True), name="static")

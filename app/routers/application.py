@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+import os
 
 from fastapi import APIRouter, Depends, UploadFile, File, Form, HTTPException, BackgroundTasks
 from sqlalchemy.orm import Session
@@ -104,9 +105,14 @@ async def create_application(
     db.commit()
     db.refresh(application)
 
-    background_tasks.add_task(_process_application, application.id)
+    is_serverless = bool(os.environ.get("VERCEL") or os.environ.get("AWS_LAMBDA_FUNCTION_NAME"))
+    if is_serverless:
+        _process_application(application.id)
+        db.refresh(application)
+    else:
+        background_tasks.add_task(_process_application, application.id)
 
-    return ApplicationCreateResponse(id=application.id, status=application.status)
+    return application
 
 
 @router.get("/{application_id}", response_model=ApplicationResultResponse)

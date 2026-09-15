@@ -19,6 +19,18 @@ class InterviewQuestion(BaseModel):
 class ApplicationCreateResponse(BaseModel):
     id: str
     status: str
+    created_at: Optional[datetime] = None
+    job_title: Optional[str] = None
+    error_message: Optional[str] = None
+    match_score: float = 0.0
+    skill_matches: list[SkillMatch] = Field(default_factory=list)
+    skill_gaps: list[str] = Field(default_factory=list)
+    tailored_cv_sections: dict = Field(default_factory=dict)
+    cover_letter: Optional[str] = None
+    interview_questions: list[InterviewQuestion] = Field(default_factory=list)
+
+    class Config:
+        from_attributes = True
 
 
 class ApplicationResultResponse(BaseModel):

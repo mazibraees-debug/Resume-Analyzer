@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI Job Application Agent</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>🤖 AI Job Application Agent</h1>
+    <p class="subtitle">CV + Job Description → Skill Match → Tailored CV, Cover Letter &amp; Interview Prep</p>
+  </header>
+
+  <main>
+    <section id="form-section" class="card">
+      <form id="application-form">
+        <label class="field">
+          <span>Your CV</span>
+          <input type="file" id="cv_file" accept=".pdf,.docx,.txt,.md" required />
+          <small>PDF, DOCX, or TXT</small>
+        </label>
+
+        <label class="field">
+          <span>Job title <em>(optional)</em></span>
+          <input type="text" id="job_title" placeholder="e.g. Senior Backend Engineer" />
+        </label>
+
+        <label class="field">
+          <span>Job description</span>
+          <textarea id="job_description" rows="10" placeholder="Paste the full job posting here..." required></textarea>
+        </label>
+
+        <button type="submit" id="submit-btn">Analyze &amp; Generate</button>
+      </form>
+    </section>
+
+    <section id="status-section" class="card hidden">
+      <div class="spinner"></div>
+      <p id="status-text">Submitting...</p>
+    </section>
+
+    <section id="results-section" class="hidden">
+      <div class="card score-card">
+        <h2>Match Score</h2>
+        <div class="score-ring">
+          <span id="score-value">0%</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>✅ Skill Matches</h2>
+        <ul id="matches-list" class="pill-list"></ul>
+      </div>
+
+      <div class="card">
+        <h2>⚠️ Skill Gaps</h2>
+        <ul id="gaps-list" class="pill-list gaps"></ul>
+      </div>
+
+      <div class="card">
+        <h2>📄 Tailored CV Sections</h2>
+        <div id="tailored-cv"></div>
+      </div>
+
+      <div class="card">
+        <h2>✉️ Cover Letter</h2>
+        <pre id="cover-letter"></pre>
+      </div>
+
+      <div class="card">
+        <h2>🎤 Interview Prep</h2>
+        <div id="interview-questions"></div>
+      </div>
+
+      <button id="reset-btn">Start a new application</button>
+    </section>
+
+    <section id="error-section" class="card error hidden">
+      <h2>Something went wrong</h2>
+      <p id="error-text"></p>
+      <button id="error-reset-btn">Try again</button>
+    </section>
+  </main>
+
+  <footer>
+    <p>Architecture: Document Parser → Embeddings (Sentence-Transformers) → Vector DB (Chroma) → Matching Agent → LangGraph LLM Agents</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

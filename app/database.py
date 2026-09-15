@@ -15,7 +15,10 @@ if settings.database_url.startswith("sqlite"):
     if raw_path and not raw_path.startswith(":memory:"):
         db_dir = os.path.dirname(os.path.abspath(raw_path))
         if db_dir:
-            os.makedirs(db_dir, exist_ok=True)
+            try:
+                os.makedirs(db_dir, exist_ok=True)
+            except OSError:
+                pass
 
 engine = create_engine(settings.database_url, connect_args=connect_args)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

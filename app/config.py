@@ -4,8 +4,10 @@ Centralized application configuration.
 All values can be overridden via environment variables or a `.env` file
 placed next to this project (see `.env.example`).
 """
+import os
 from functools import lru_cache
 from pathlib import Path
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -24,8 +26,14 @@ class Settings(BaseSettings):
 
     # --- Database ---
     # Defaults to a local SQLite file so the project runs with zero setup.
-    # In docker-compose this is overridden to point at the Postgres service.
-    database_url: str = "sqlite:///./data/app.db"
+    # In Vercel serverless, defaults to /tmp/app.db (read-only filesystem workaround).
+    database_url: str = Field(
+        default_factory=lambda: (
+            "sqlite:////tmp/app.db"
+            if os.environ.get("VERCEL")
+            else "sqlite:///./data/app.db"
+        )
+    )
 
     # --- Vector store (Chroma) ---
     chroma_db_path: str = "./data/chroma_db"
@@ -47,7 +55,13 @@ class Settings(BaseSettings):
     openai_model: str = "openai/gpt-4o-mini"
 
     # --- Uploads ---
-    upload_dir: str = "./data/uploads"
+    upload_dir: str = Field(
+        default_factory=lambda: (
+            "/tmp/uploads"
+            if os.environ.get("VERCEL")
+            else "./data/uploads"
+        )
+    )
     max_upload_mb: int = 10
 
     # --- Matching ---
@@ -55,6 +69,13 @@ class Settings(BaseSettings):
     # considered "matched" by something in the candidate's CV.
     match_threshold: float = 0.20
     top_k_matches: int = 3
+
+    def model_post_init(self, __context) -> None:
+        if os.environ.get("VERCEL"):
+            if self.database_url.startswith("sqlite:///.") or self.database_url.startswith("sqlite://data"):
+                self.database_url = "sqlite:////tmp/app.db"
+            if self.upload_dir.startswith("./data") or self.upload_dir.startswith("data"):
+                self.upload_dir = "/tmp/uploads"
 
 
 @lru_cache
