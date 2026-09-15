@@ -29,7 +29,11 @@ class LLMClient:
             from openai import OpenAI
 
             kwargs = {
-                "api_key": self._settings.openai_api_key or None,
+                "api_key": (
+                    self._settings.openrouter_api_key
+                    or self._settings.openai_api_key
+                    or None
+                ),
                 "max_retries": 1,
             }
             if getattr(self._settings, "openai_base_url", None):

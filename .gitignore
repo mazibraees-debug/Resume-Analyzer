@@ -1,0 +1,53 @@
+# Environments & Secrets
+.env
+.env.*
+*.env
+!.env.example
+*.key
+*.pem
+*.token
+*.secret
+*credentials*
+
+# Virtual Environments
+venv/
+.venv/
+env/
+ENV/
+
+# Databases & Data
+data/
+*.db
+*.sqlite
+*.sqlite3
+*.duckdb
+
+# User Uploads
+uploads/
+*.pdf
+*.docx
+*.doc
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+dist/
+build/
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+
+# OS & Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node
+node_modules/

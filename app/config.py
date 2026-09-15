@@ -5,11 +5,18 @@ All values can be overridden via environment variables or a `.env` file
 placed next to this project (see `.env.example`).
 """
 from functools import lru_cache
+from pathlib import Path
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+
+
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+    model_config = SettingsConfigDict(
+        env_file=(".env", PROJECT_ROOT / ".env", PROJECT_ROOT / "backend" / ".env"),
+        extra="ignore",
+    )
 
     # --- General ---
     app_name: str = "AI Job Application Agent"
@@ -34,9 +41,10 @@ class Settings(BaseSettings):
     llm_provider: str = "openai"
     anthropic_api_key: str = ""
     anthropic_model: str = "claude-sonnet-4-5"
+    openrouter_api_key: str = ""
     openai_api_key: str = ""
-    openai_base_url: str = "https://api.experientiallabs.ai/v1"
-    openai_model: str = "gpt-6-astra"
+    openai_base_url: str = "https://openrouter.ai/api/v1"
+    openai_model: str = "openai/gpt-4o-mini"
 
     # --- Uploads ---
     upload_dir: str = "./data/uploads"
