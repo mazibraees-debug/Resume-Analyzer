@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NeuralApply — AI Job Application Agent</title>
+  <meta name="description" content="Upload your CV and job description. Our AI matches your skills, identifies gaps, and generates a tailored CV, cover letter, and interview prep in seconds." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Animated particle canvas background -->
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-brand">
+      <div class="brand-icon">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="url(#g1)" stroke-width="2" stroke-linejoin="round"/>
+          <path d="M2 17L12 22L22 17" stroke="url(#g1)" stroke-width="2" stroke-linejoin="round"/>
+          <path d="M2 12L12 17L22 12" stroke="url(#g1)" stroke-width="2" stroke-linejoin="round"/>
+          <defs>
+            <linearGradient id="g1" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#6C8CFF"/>
+              <stop offset="100%" stop-color="#38D39F"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <span class="brand-name">Neural<span class="brand-accent">Apply</span></span>
+    </div>
+    <div class="nav-links">
+      <a href="#" class="nav-link active">Dashboard</a>
+      <a href="#" class="nav-link">History</a>
+      <a href="#" class="nav-link">Analytics</a>
+    </div>
+    <div class="nav-badge">
+      <span class="ai-dot"></span>
+      AI-Powered
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-pill">
+        <span class="pulse-dot"></span>
+        AI Agent Active
+      </div>
+      <h1 class="hero-title">
+        Elevate Your Applications<br />
+        with <span class="gradient-text">AI Intelligence</span>
+      </h1>
+      <p class="hero-sub">
+        Upload your CV + job description. Our LangGraph AI analyzes skill matches,
+        identifies gaps, and generates a tailored CV, cover letter &amp; interview prep.
+      </p>
+
+      <!-- Stats Row -->
+      <div class="stats-row">
+        <div class="stat-item">
+          <span class="stat-num">98%</span>
+          <span class="stat-label">Accuracy</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-num">&lt;60s</span>
+          <span class="stat-label">Processing</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-num">3x</span>
+          <span class="stat-label">More Interviews</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Application Area -->
+  <main class="main-content">
+
+    <!-- Upload Form -->
+    <section id="form-section" class="glass-card form-card">
+      <div class="card-header">
+        <div class="card-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14,2 14,8 20,8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="card-title">New Application</h2>
+          <p class="card-subtitle">Upload your CV and paste the job description</p>
+        </div>
+      </div>
+
+      <form id="application-form" autocomplete="off">
+        <!-- CV Upload Zone -->
+        <div class="field-group">
+          <label class="field-label" for="cv_file">
+            <span class="label-icon">&#128196;</span> Your CV
+          </label>
+          <div id="drop-zone" class="drop-zone">
+            <input type="file" id="cv_file" accept=".pdf,.docx,.txt,.md" required hidden />
+            <div class="drop-inner" id="drop-clickable">
+              <div class="drop-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="17 8 12 3 7 8"/>
+                  <line x1="12" y1="3" x2="12" y2="15"/>
+                </svg>
+              </div>
+              <p class="drop-title" id="drop-label">Drop your CV here or <span class="link-text">browse</span></p>
+              <p class="drop-hint">PDF, DOCX, or TXT &mdash; max 10MB</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Job Title -->
+        <div class="field-group">
+          <label class="field-label" for="job_title">
+            <span class="label-icon">&#128188;</span> Job Title <em class="optional-tag">optional</em>
+          </label>
+          <div class="input-wrapper">
+            <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+            </svg>
+            <input type="text" id="job_title" class="text-input" placeholder="e.g. Senior Backend Engineer" />
+          </div>
+        </div>
+
+        <!-- Job Description -->
+        <div class="field-group">
+          <label class="field-label" for="job_description">
+            <span class="label-icon">&#128203;</span> Job Description
+          </label>
+          <textarea id="job_description" class="text-area" rows="9" placeholder="Paste the full job posting here... Include requirements, responsibilities, and qualifications for the best AI match analysis." required></textarea>
+        </div>
+
+        <button type="submit" id="submit-btn" class="primary-btn">
+          <span class="btn-text">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            Analyze &amp; Generate
+          </span>
+          <div class="btn-shimmer"></div>
+        </button>
+      </form>
+    </section>
+
+    <!-- Status / Loading -->
+    <section id="status-section" class="glass-card status-card hidden">
+      <div class="status-inner">
+        <div class="ai-loader">
+          <div class="loader-ring ring-1"></div>
+          <div class="loader-ring ring-2"></div>
+          <div class="loader-ring ring-3"></div>
+          <div class="loader-core">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+            </svg>
+          </div>
+        </div>
+        <h2 class="status-title">AI Agent Processing</h2>
+        <p id="status-text" class="status-text">Submitting your application...</p>
+        <div class="progress-steps">
+          <div class="step" id="step-1">
+            <div class="step-dot active"></div>
+            <span>Parsing CV</span>
+          </div>
+          <div class="step-line"></div>
+          <div class="step" id="step-2">
+            <div class="step-dot"></div>
+            <span>Embedding</span>
+          </div>
+          <div class="step-line"></div>
+          <div class="step" id="step-3">
+            <div class="step-dot"></div>
+            <span>Matching</span>
+          </div>
+          <div class="step-line"></div>
+          <div class="step" id="step-4">
+            <div class="step-dot"></div>
+            <span>Generating</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Results Section -->
+    <section id="results-section" class="hidden">
+
+      <!-- Match Score Hero Card -->
+      <div class="glass-card score-hero">
+        <div class="score-left">
+          <h2 class="score-title">AI Match Analysis</h2>
+          <p class="score-desc">Based on embedding similarity between your CV and the job requirements</p>
+          <div class="score-tags">
+            <span class="tag tag-green" id="match-count-badge">0 Strong Matches</span>
+            <span class="tag tag-yellow" id="gap-count-badge">0 Gaps Identified</span>
+          </div>
+          <button id="reset-btn" class="secondary-btn">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="1 4 1 10 7 10"/>
+              <path d="M3.51 15a9 9 0 1 0 .49-3.24"/>
+            </svg>
+            New Application
+          </button>
+        </div>
+        <div class="score-right">
+          <div class="ring-container">
+            <svg class="score-ring-svg" viewBox="0 0 120 120">
+              <circle class="ring-bg" cx="60" cy="60" r="50" />
+              <circle class="ring-fill" id="score-ring-fill" cx="60" cy="60" r="50"
+                stroke-dasharray="314"
+                stroke-dashoffset="314"
+                transform="rotate(-90 60 60)" />
+            </svg>
+            <div class="ring-label">
+              <span class="ring-score" id="score-value">0%</span>
+              <span class="ring-sub">Match</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Skill Matches and Gaps Grid -->
+      <div class="results-grid">
+        <div class="glass-card">
+          <div class="card-header">
+            <div class="card-icon card-icon-green">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="card-title">Skill Matches</h3>
+              <p class="card-subtitle">Requirements found in your CV</p>
+            </div>
+          </div>
+          <ul id="matches-list" class="skill-list"></ul>
+        </div>
+
+        <div class="glass-card">
+          <div class="card-header">
+            <div class="card-icon card-icon-yellow">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="8" x2="12" y2="12"/>
+                <line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="card-title">Skill Gaps</h3>
+              <p class="card-subtitle">Requirements not found in your CV</p>
+            </div>
+          </div>
+          <ul id="gaps-list" class="skill-list gaps-list"></ul>
+        </div>
+      </div>
+
+      <!-- Tailored CV -->
+      <div class="glass-card">
+        <div class="card-header">
+          <div class="card-icon card-icon-blue">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+            </svg>
+          </div>
+          <div>
+            <h3 class="card-title">Tailored CV Sections</h3>
+            <p class="card-subtitle">AI-optimized content based on your matches</p>
+          </div>
+        </div>
+        <div id="tailored-cv" class="tailored-cv-content"></div>
+      </div>
+
+      <!-- Cover Letter -->
+      <div class="glass-card">
+        <div class="card-header">
+          <div class="card-icon card-icon-purple">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <polyline points="22,6 12,13 2,6"/>
+            </svg>
+          </div>
+          <div>
+            <h3 class="card-title">Cover Letter</h3>
+            <p class="card-subtitle">Personalized and grounded in your actual experience</p>
+          </div>
+          <button id="copy-cover-btn" class="icon-btn" title="Copy to clipboard">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+            </svg>
+          </button>
+        </div>
+        <pre id="cover-letter" class="cover-letter-text"></pre>
+      </div>
+
+      <!-- Interview Prep -->
+      <div class="glass-card">
+        <div class="card-header">
+          <div class="card-icon card-icon-teal">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+          </div>
+          <div>
+            <h3 class="card-title">Interview Prep</h3>
+            <p class="card-subtitle">Likely questions with your personalized talking points</p>
+          </div>
+        </div>
+        <div id="interview-questions" class="interview-grid"></div>
+      </div>
+
+    </section>
+
+    <!-- Error Section -->
+    <section id="error-section" class="glass-card error-card hidden">
+      <div class="error-inner">
+        <div class="error-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="15" y1="9" x2="9" y2="15"/>
+            <line x1="9" y1="9" x2="15" y2="15"/>
+          </svg>
+        </div>
+        <h2 class="error-title">Something went wrong</h2>
+        <p id="error-text" class="error-text"></p>
+        <button id="error-reset-btn" class="primary-btn">Try Again</button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span class="brand-name">Neural<span class="brand-accent">Apply</span></span>
+      </div>
+      <p class="footer-tech">
+        Powered by <span class="tech-tag">LangGraph</span>
+        <span class="tech-tag">Sentence-Transformers</span>
+        <span class="tech-tag">FastAPI</span>
+        <span class="tech-tag">OpenRouter</span>
+      </p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
